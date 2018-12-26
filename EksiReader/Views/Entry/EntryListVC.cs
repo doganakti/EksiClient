@@ -41,6 +41,19 @@ namespace EksiReader
             }
         }
 
+        PagingVC _pagingVC;
+        PagingVC PagingVC 
+        {
+            get
+            {
+                if (_pagingVC == null)
+                {
+                    _pagingVC = (PagingVC)Storyboard.InstantiateViewController("PagingViewController");
+                }
+                return _pagingVC;
+            }
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:EksiReader.EntryListVC"/> class.
         /// </summary>
@@ -57,13 +70,25 @@ namespace EksiReader
             base.ViewDidLoad();
             TableView.RowHeight = UITableView.AutomaticDimension;
             TableView.EstimatedRowHeight = 44;
-            TableView.SectionHeaderHeight = UITableView.AutomaticDimension;
-            TableView.EstimatedSectionHeaderHeight = 44;
             TableView.SeparatorColor = Common.Template.LinkColor.ColorFromHEX().ColorWithAlpha(0.2f);
             TableView.BackgroundColor = Common.Template.BackgroundColor.ColorFromHEX();
             TableView.AllowsSelection = false;
+            //Title = Topic.Title;
+            UITextView textView = new UITextView
+            {
+                ScrollEnabled = false,
+                Text = Topic.Title,
+                Font = UIFont.FromName(Common.Template.LargeBarFontName, Common.Template.LargeBarFontSize),
+                TextColor = Common.Template.BarFontColor.ColorFromHEX(),
+                BackgroundColor = Common.Template.BackgroundColor.ColorFromHEX(),
+                TextContainerInset = new UIEdgeInsets(9, 9, 9, 9),
+                Editable = false,
+                Selectable = false
+            };
+            textView.SizeToFit();
+            var header = new UIView(new CoreGraphics.CGRect(0, 0, 300, 200));
+            TableView.TableHeaderView = textView;
         }
-
 
         /// <summary>
         /// Rowses the in section.
@@ -77,31 +102,16 @@ namespace EksiReader
         }
 
         /// <summary>
-        /// Gets the view for header.
+        /// Gets the view for footer.
         /// </summary>
-        /// <returns>The view for header.</returns>
-        /// <param name="tableView">Tabl    e view.</param>
+        /// <returns>The view for footer.</returns>
+        /// <param name="tableView">Table view.</param>
         /// <param name="section">Section.</param>
-        public override UIView GetViewForHeader(UITableView tableView, nint section)
+        public override UIView GetViewForFooter(UITableView tableView, nint section)
         {
-            UITextView textView = new UITextView
-            {
-                ScrollEnabled = false,
-                Text = Topic.Title,
-                Font = UIFont.FromName(Common.Template.LargeBarFontName, Common.Template.LargeBarFontSize),
-                TextColor = Common.Template.BarFontColor.ColorFromHEX(),
-                BackgroundColor = Common.Template.BackgroundColor.ColorFromHEX(),
-                TextContainerInset = new UIEdgeInsets(9, 9, 9, 9),
-                Editable = false,
-                Selectable = false
-            };
-            return textView;
+            return PagingVC.View;
         }
 
-        public override nfloat GetHeightForFooter(UITableView tableView, nint section)
-        {
-            return 0.1f;
-        }
 
         /// <summary>
         /// Gets the cell.

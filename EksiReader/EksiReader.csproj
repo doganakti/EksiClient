@@ -103,6 +103,7 @@
     <Folder Include="Resources\SubResources\" />
     <Folder Include="Views\Entry\" />
     <Folder Include="Resources\Images\" />
+    <Folder Include="Views\Paging\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
@@ -140,6 +141,10 @@
     <Compile Include="CustomEntryCell.designer.cs">
       <DependentUpon>CustomEntryCell.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Paging\PagingVC.cs" />
+    <Compile Include="Views\Paging\PagingVC.designer.cs">
+      <DependentUpon>PagingVC.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EksiClient\EksiClient.csproj">
@@ -168,6 +173,10 @@
     <BundleResource Include="Resources\Images\down-arrow%402x.png" />
     <BundleResource Include="Resources\Images\drop%403x.png" />
     <BundleResource Include="Resources\Images\drop%402x.png" />
+    <BundleResource Include="Resources\Images\next-page%402x.png" />
+    <BundleResource Include="Resources\Images\previous-page%403x.png" />
+    <BundleResource Include="Resources\Images\previous-page%402x.png" />
+    <BundleResource Include="Resources\Images\next-page%403x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
