@@ -86,10 +86,6 @@ namespace EksiClient
                 {
                     if (childNode.Name == "#text")
                     {
-                        if (childNode.InnerText.Contains("bkz:"))
-                        {
-                            System.Diagnostics.Debug.WriteLine("here");
-                        }
                         text = text + childNode.InnerText.Trim();
                         entryContentList.Add(new EntryContent { Text = childNode.InnerText.Trim() });
                     }
@@ -156,7 +152,6 @@ namespace EksiClient
             foreach (Cookie cookie in responseCookies)
             {
                 System.Diagnostics.Debug.WriteLine(cookie.Name + ": " + cookie.Value);
-
             }
 
             return loggedIn;

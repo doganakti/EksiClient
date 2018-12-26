@@ -26,6 +26,10 @@ namespace EksiReader
                     Task.Run(() =>
                     {
                         _entryList = EksiService.GetEntries(Topic.Path);
+                        foreach(var entry in _entryList)
+                        {
+                            entry.AttributedString = Common.GetAttributedString(entry.ContentList);
+                        }
                         BeginInvokeOnMainThread(TableView.ReloadData);
                     });
                 }

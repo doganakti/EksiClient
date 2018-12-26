@@ -78,6 +78,7 @@
     <MtouchArch>ARM64</MtouchArch>
     <MtouchHttpClientHandler>NSUrlSessionHandler</MtouchHttpClientHandler>
     <MtouchVerbosity></MtouchVerbosity>
+    <CodesignProvision>EksiReaderDev</CodesignProvision>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -101,11 +102,11 @@
     <Folder Include="Models\" />
     <Folder Include="Resources\SubResources\" />
     <Folder Include="Views\Entry\" />
+    <Folder Include="Resources\Images\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
     <InterfaceDefinition Include="Main.storyboard" />
-    <InterfaceDefinition Include="Resources\Views\Entry\TopicCell.xib" />
     <InterfaceDefinition Include="Views\Entry\EntryCell.xib" />
   </ItemGroup>
   <ItemGroup>
@@ -161,6 +162,12 @@
     <BundleResource Include="Resources\Template.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </BundleResource>
+    <BundleResource Include="Resources\Images\up-arrow%403x.png" />
+    <BundleResource Include="Resources\Images\up-arrow%402x.png" />
+    <BundleResource Include="Resources\Images\down-arrow%403x.png" />
+    <BundleResource Include="Resources\Images\down-arrow%402x.png" />
+    <BundleResource Include="Resources\Images\drop%403x.png" />
+    <BundleResource Include="Resources\Images\drop%402x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

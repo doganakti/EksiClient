@@ -26,7 +26,7 @@ namespace EksiReader
         {
             if (TextView != null)
             {
-                TextView.AttributedText = Common.GetAttributedString(entry.ContentList);
+                TextView.AttributedText = ((NSAttributedString)entry.AttributedString);
                 TextView.Font = UIFont.FromName(Common.Template.TextFontName, Common.Template.TextFontSize);
                 BackgroundColor = UIColor.Clear;
                 TextView.TextColor = Common.Template.TextColor.ColorFromHEX();
@@ -35,6 +35,8 @@ namespace EksiReader
                 TextView.TintColor = Common.Template.LinkColor.ColorFromHEX();
                 AuthorButton.SetTitle(entry.Author, UIControlState.Normal);
                 DateLabel.Text = entry.Date;
+                Layer.ShouldRasterize = true;
+                Layer.RasterizationScale = UIScreen.MainScreen.Scale;
             }
         }
     }

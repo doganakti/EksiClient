@@ -37,5 +37,11 @@ namespace EksiClient
         /// </summary>
         /// <value>The date.</value>
         public string Date { get; set; }
+
+        /// <summary>
+        /// Gets or sets the attribute string.
+        /// </summary>
+        /// <value>The attribute string.</value>
+        public object AttributedString { get; set; }
     }
 }
