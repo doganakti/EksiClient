@@ -1,0 +1,17 @@
+{
+  "Sepia": {
+    "LargeBarFontName": "OpenSans-SemiBold",
+    "LargeBarFontSize": 30,
+    "BarFontName": "OpenSans-SemiBold",
+    "BarFontSize": 20,
+    "BarFontColor": "#484035",
+    "BarBackgroundColor": "#f6efdc",
+    "TextFontName": "OpenSans-Regular",
+    "TextFontSize": 15,
+    "TextColor": "#1a1a1a",
+    "BadgeFontName": "OpenSans-SemiBold",
+    "BadgeFontSize": 13,
+    "BadgeFontColor": "#1a1a1a",
+    "BackgroundColor": "#f6efdc"
+  }
+}
