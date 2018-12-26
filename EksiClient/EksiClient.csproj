@@ -35,6 +35,8 @@
     <Compile Include="Helpers\AsyncHelper.cs" />
     <Compile Include="Helpers\Shaa.cs" />
     <Compile Include="Models\Channel.cs" />
+    <Compile Include="Models\Entry.cs" />
+    <Compile Include="Models\EntryContent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="HtmlAgilityPack">

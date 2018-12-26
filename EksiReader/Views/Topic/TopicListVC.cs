@@ -19,12 +19,9 @@ namespace EksiReader
             base.ViewDidLoad();
             TableView.RowHeight = UITableView.AutomaticDimension;
             TableView.EstimatedRowHeight = 44;
-            //TableView.SeparatorColor = UIColor.Clear;
+            TableView.SeparatorColor = Common.Template.LinkColor.ColorFromHEX().ColorWithAlpha(0.2f);
             TableView.BackgroundColor = Common.Template.BackgroundColor.ColorFromHEX();
-            //TableView.ReloadData();
             Title = "Gündem";
-
-            NavigationController.NavigationBar.PrefersLargeTitles = true;
         }
 
         public override nint RowsInSection(UITableView tableView, nint section)
@@ -52,6 +49,33 @@ namespace EksiReader
             cell.BackgroundColor = UIColor.Clear;
             cell.TextLabel.TextColor = Common.Template.TextColor.ColorFromHEX();
             return cell;
+        }
+
+        /// <summary>
+        /// Rows the selected.
+        /// </summary>
+        /// <param name="tableView">Table view.</param>
+        /// <param name="indexPath">Index path.</param>
+        public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
+        {
+            PerformSegue("EntryListSegue", indexPath);
+            tableView.DeselectRow(indexPath, true);
+        }
+
+        /// <summary>
+        /// Prepares for segue.
+        /// </summary>
+        /// <param name="segue">Segue.</param>
+        /// <param name="sender">Sender.</param>
+        public override void PrepareForSegue(UIStoryboardSegue segue, NSObject sender)
+        {
+            if (segue.Identifier == "EntryListSegue")
+            {
+                var entryListVC = (EntryListVC)segue.DestinationViewController;
+                var indexPath = (NSIndexPath)sender;
+                var topic = _topicList[indexPath.Row];
+                entryListVC.Topic = topic;
+            }
         }
     }
 }

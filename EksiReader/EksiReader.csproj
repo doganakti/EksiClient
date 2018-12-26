@@ -100,10 +100,13 @@
     <Folder Include="Views\Topic\" />
     <Folder Include="Models\" />
     <Folder Include="Resources\SubResources\" />
+    <Folder Include="Views\Entry\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
     <InterfaceDefinition Include="Main.storyboard" />
+    <InterfaceDefinition Include="Resources\Views\Entry\TopicCell.xib" />
+    <InterfaceDefinition Include="Views\Entry\EntryCell.xib" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -124,6 +127,18 @@
       <DependentUpon>TopicListVC.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Template.cs" />
+    <Compile Include="Views\Entry\EntryListVC.cs" />
+    <Compile Include="Views\Entry\EntryListVC.designer.cs">
+      <DependentUpon>EntryListVC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Entry\EntryCell.cs" />
+    <Compile Include="Views\Entry\EntryCell.designer.cs">
+      <DependentUpon>EntryCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomEntryCell.cs" />
+    <Compile Include="CustomEntryCell.designer.cs">
+      <DependentUpon>CustomEntryCell.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EksiClient\EksiClient.csproj">

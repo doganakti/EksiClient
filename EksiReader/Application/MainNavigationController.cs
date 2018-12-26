@@ -15,22 +15,22 @@ namespace EksiReader
             base.ViewDidLoad();
             if (Common.SystemVersion >= 11.0)
             {
-                this.NavigationBar.PrefersLargeTitles = true;
+                this.NavigationBar.PrefersLargeTitles = false;
                 NavigationBar.LargeTitleTextAttributes = new UIStringAttributes()
                 {
-                    Font = UIFont.FromName("OpenSans-SemiBold", 30),
-                    ForegroundColor = "#484035".ColorFromHEX()
+                    Font = UIFont.FromName(Common.Template.LargeBarFontName, Common.Template.LargeBarFontSize),
+                    ForegroundColor = Common.Template.BarFontColor.ColorFromHEX()
                 };
             }
 
             UINavigationBar.Appearance.ShadowImage = new UIImage();
-            NavigationBar.BarTintColor = "#f6efdc".ColorFromHEX();
+            NavigationBar.BarTintColor = Common.Template.BarBackgroundColor.ColorFromHEX();
+            NavigationBar.TintColor = Common.Template.LinkColor.ColorFromHEX();
             NavigationBar.TitleTextAttributes = new UIStringAttributes()
             {
-                Font = UIFont.FromName("OpenSans-SemiBold", 20),
-                ForegroundColor = "#484035".ColorFromHEX()
+                Font = UIFont.FromName(Common.Template.BarFontName, Common.Template.BarFontSize),
+                ForegroundColor = Common.Template.BarFontColor.ColorFromHEX()
             };
-
         }
     }
 }

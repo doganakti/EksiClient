@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using EksiClient;
 using Foundation;
 using Newtonsoft.Json;
 using UIKit;
@@ -72,6 +73,52 @@ namespace EksiReader
             {
                 return TemplateDictionary["Sepia"];
             }
+        }
+
+        /// <summary>
+        /// Gets the attributed string.
+        /// </summary>
+        /// <returns>The attributed string.</returns>
+        /// <param name="contentList">Content list.</param>
+        public static NSAttributedString GetAttributedString(List<EntryContent> contentList)
+        {
+            var attributedString = new NSMutableAttributedString();
+            foreach(var content in contentList)
+            {
+                if (content.Text != null)
+                {
+                    attributedString.Append(
+                        new NSAttributedString(content.Text + " ")
+                    );
+                }
+                else if (content.Break != false)
+                {
+                    attributedString.Append(
+                        new NSAttributedString("\n")
+                    );
+                }
+                else if (content.LinkTitle != null)
+                {
+                    attributedString.Append(
+                    new NSAttributedString(content.LinkTitle + "~", new UIStringAttributes
+                    {
+                        ForegroundColor = UIColor.Brown,
+                        Link = NSUrl.FromString(content.LinkPath)
+                    })
+                    );
+                }
+                else if (content.InnerLinkTitle != null)
+                {
+                    attributedString.Append(
+                    new NSAttributedString(content.InnerLinkTitle, new UIStringAttributes
+                    {
+                        ForegroundColor = UIColor.Brown,
+                        Link = NSUrl.FromString(content.InnerLinkPath)
+                    })
+                    );
+                }
+            }
+            return attributedString;
         }
     }
 }

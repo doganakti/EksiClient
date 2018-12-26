@@ -83,5 +83,11 @@ namespace EksiReader
         /// </summary>
         /// <value>The color of the background.</value>
         public string BackgroundColor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the color of the link.
+        /// </summary>
+        /// <value>The color of the link.</value>
+        public string LinkColor { get; set; }
     }
 }

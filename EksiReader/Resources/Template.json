@@ -1,17 +1,18 @@
 {
   "Sepia": {
     "LargeBarFontName": "OpenSans-SemiBold",
-    "LargeBarFontSize": 30,
+    "LargeBarFontSize": 20,
     "BarFontName": "OpenSans-SemiBold",
-    "BarFontSize": 20,
+    "BarFontSize": 15,
     "BarFontColor": "#484035",
     "BarBackgroundColor": "#f6efdc",
     "TextFontName": "OpenSans-Regular",
-    "TextFontSize": 15,
+    "TextFontSize": 14,
     "TextColor": "#1a1a1a",
     "BadgeFontName": "OpenSans-SemiBold",
     "BadgeFontSize": 13,
     "BadgeFontColor": "#1a1a1a",
-    "BackgroundColor": "#f6efdc"
+    "BackgroundColor": "#f6efdc",
+    "LinkColor": "#ab6203"
   }
 }
