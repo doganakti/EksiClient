@@ -21,6 +21,8 @@ namespace EksiReader
             // Override point for customization after application launch.
             // If not required for your application you can safely delete this method
             UIApplication.CheckForIllegalCrossThreadCalls = false;
+            EksiClient.EksiService.Login("doganakti@gmail.com", "Sh44b1d1r.");
+            //EksiClient.EksiService.GetTopics();
             return true;
         }
 

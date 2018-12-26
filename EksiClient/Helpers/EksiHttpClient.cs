@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,13 +15,25 @@ namespace EksiClient
         /// <summary>
         /// Initializes a new instance of the <see cref="T:EksiClient.EksiHttpClient"/> class.
         /// </summary>
-        /// <param name="path">Path.</param>
-        public EksiHttpClient(string path, int page = 0)
+        public EksiHttpClient(HttpMessageHandler handler):base(handler)
         {
             DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1)");
             DefaultRequestHeaders.UserAgent.ParseAdd("AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36");
-            path = "https://eksisozluk.com" + path + (page == 0 ? "" : $"?p={page}");
-            BaseAddress = new Uri(path);
+        }
+
+
+        string _path;
+        public string Path 
+        { 
+            get
+            {
+                return _path;
+            }
+            set
+            {
+                _path = "https://eksisozluk.com" + value;
+                BaseAddress = new Uri(_path);
+            }
         }
 
         /// <summary>
