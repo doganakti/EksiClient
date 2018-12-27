@@ -44,6 +44,7 @@
     <Compile Include="Helpers\ExceptionHelper.cs" />
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Helpers\HttpUtility.cs" />
+    <Compile Include="Models\MoreData.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="HtmlAgilityPack">

@@ -21,7 +21,9 @@ namespace EksiReader
         /// Gets or sets the entry list.
         /// </summary>
         /// <value>The entry list.</value>
-        List<Entry> EntryList { get; set; }
+        List<Entry> _entryList { get; set; }
+
+        MoreData _moreData { get; set; }
 
         PagingVC _pagingVC;
         PagingVC PagingVC
@@ -68,8 +70,8 @@ namespace EksiReader
             TableView.EstimatedRowHeight = 44;
             TableView.SeparatorColor = Common.Template.LinkColor.ColorFromHEX().ColorWithAlpha(0.2f);
             TableView.BackgroundColor = Common.Template.BackgroundColor.ColorFromHEX();
-            TableView.AllowsSelection = false;
-            if (Topic != null && EntryList == null)
+            TableView.AllowsSelection = true;
+            if (Topic != null && _entryList == null)
             {
                 SetEntryList();
             }
@@ -80,10 +82,11 @@ namespace EksiReader
             InvokeInBackground(() =>
             {
                 var result = EksiService.GetEntries(Topic.Path, page);
-                EntryList = result.ResultList;
+                _entryList = result.ResultList;
                 _pager = result.Pager;
+                _moreData = result.MoreData;
                 Topic = result.Topic;
-                foreach (var entry in EntryList)
+                foreach (var entry in _entryList)
                 {
                     entry.AttributedString = Common.GetAttributedString(entry.ContentList);
                 }
@@ -104,7 +107,7 @@ namespace EksiReader
         /// <param name="section">Section.</param>
         public override nint RowsInSection(UITableView tableView, nint section)
         {
-            return EntryList != null ? EntryList.Count + 1 : 0;
+            return _entryList != null ? _entryList.Count + 1 : 0;
         }
 
         /// <summary>
@@ -133,6 +136,17 @@ namespace EksiReader
                 cell.TextLabel.Font = UIFont.FromName(Common.Template.LargeBarFontName, Common.Template.LargeBarFontSize);
                 cell.TextLabel.TextColor = Common.Template.BarFontColor.ColorFromHEX();
                 cell.TextLabel.Text = Topic.Title;
+                cell.DetailTextLabel.Font = UIFont.FromName(Common.Template.TextFontName, Common.Template.TextFontSize);
+                if (_moreData != null)
+                {
+                    cell.SelectionStyle = UITableViewCellSelectionStyle.Gray;
+                    cell.DetailTextLabel.Text = _moreData.Title;
+                }
+                else
+                {
+                    cell.DetailTextLabel.Text = null;
+                    cell.SelectionStyle = UITableViewCellSelectionStyle.None;
+                }
                 return cell;
             }
             else
@@ -142,11 +156,21 @@ namespace EksiReader
                 {
                     Console.WriteLine("null cell");
                 }
-                var entry = EntryList[indexPath.Row - 1];
+                var entry = _entryList[indexPath.Row - 1];
                 cell.SetEntry(entry);
                 cell.OnPath += Cell_OnPath;
                 cell.OnYoutube += Cell_OnYoutube;
+                cell.SelectionStyle = UITableViewCellSelectionStyle.None;
                 return cell;
+            }
+        }
+
+        public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
+        {
+            if (indexPath.Row == 0 && _moreData != null)
+            {
+                Topic = new Topic { Path = _moreData.Path, Title = Topic.Title };
+                SetEntryList();
             }
         }
 
@@ -159,7 +183,7 @@ namespace EksiReader
         void Cell_OnPath(object sender, string e)
         {
             var indexpath = TableView.IndexPathForCell((UITableViewCell)sender);
-            var entry = EntryList[indexpath.Row - 1];
+            var entry = _entryList[indexpath.Row - 1];
             var content = entry.ContentList.Find(o => o.InnerLinkPath == e);
             if (content != null)
             {

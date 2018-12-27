@@ -28,7 +28,7 @@ namespace EksiReader
         public override void ViewDidLoad()
         {
             base.ViewDidLoad();
-            PlayerView.Frame = new CoreGraphics.CGRect(0, 0, View.Frame.Size.Width - 20, View.Frame.Size.Width * 9 / 16 - 20);
+            PlayerView.Frame = new CoreGraphics.CGRect(0, 0, View.Frame.Size.Width - 20, View.Frame.Size.Width * 9 / 16);
             PlayerView.BackgroundColor = UIColor.Orange;
             View.AddSubview(PlayerView);
         }

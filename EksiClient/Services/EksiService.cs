@@ -104,6 +104,13 @@ namespace EksiClient
                     result.Pager = pager;
                 }
 
+                var moreResult = GetMore(document);
+                if (moreResult.ResultList.HasItem())
+                {
+                    var moreData = moreResult.ResultList.First();
+                    result.MoreData = moreData;
+                }
+
                 var topicResult = GetTopic(document);
                 if (topicResult.ResultList.HasItem())
                 {
@@ -112,7 +119,7 @@ namespace EksiClient
                     foreach(var q in query)
                     {
                         var index = query.IndexOf(q);
-                        if (q.Key != "p")
+                        if (q.Key != "p" && q.Key != "focusto")
                         {
                             if (index == 0)
                             {
@@ -244,6 +251,32 @@ namespace EksiClient
             catch (Exception ex)
             {
                 ExceptionHelper.Write(typeof(EksiService), ex);
+                result.Status = Status.Fail;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the more.
+        /// </summary>
+        /// <returns>The more.</returns>
+        public static Result<MoreData> GetMore(HtmlDocument document)
+        {
+            var result = new Result<MoreData>();
+            try
+            {
+                var eksiTopic = document.GetElementbyId("topic");
+                var eksiMoreData = eksiTopic.Descendants("a").First(o => o.HasClass("more-data"));
+                if (eksiMoreData != null)
+                {
+                    var path = eksiMoreData.Attributes["href"].Value;
+                    var title = eksiMoreData.InnerText.Trim();
+                    var moreData = new MoreData { Title = title, Path = path };
+                    result.ResultList = moreData.AsList();
+                }
+            }
+            catch
+            {
                 result.Status = Status.Fail;
             }
             return result;

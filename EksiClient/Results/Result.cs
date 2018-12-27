@@ -37,5 +37,11 @@ namespace EksiClient
         /// </summary>
         /// <value>The topic.</value>
         public Topic Topic { get; set; }
+
+        /// <summary>
+        /// Gets or sets the more.
+        /// </summary>
+        /// <value>The more.</value>
+        public MoreData MoreData { get; set; }
     }
 }
