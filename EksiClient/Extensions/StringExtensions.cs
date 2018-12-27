@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+
 namespace EksiClient
 {
     /// <summary>
@@ -31,6 +33,34 @@ namespace EksiClient
         public static string SplitCamelCase(this string input)
         {
             return System.Text.RegularExpressions.Regex.Replace(input, "([A-Z])", " $1", System.Text.RegularExpressions.RegexOptions.CultureInvariant).Trim();
+        }
+
+        /// <summary>
+        /// Gets the video identifier.
+        /// </summary>
+        /// <returns>The video identifier.</returns>
+        /// <param name="url">URL.</param>
+        public static string GetVideoId(this string url)
+        {
+            try
+            {
+                var uri = new Uri(url);
+                var query = HttpUtility.ParseQueryString(uri.Query);
+                var videoId = string.Empty;
+                if (query.ContainsKey("v"))
+                {
+                    videoId = query["v"];
+                }
+                else
+                {
+                    videoId = uri.Segments.Last();
+                }
+                return videoId;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

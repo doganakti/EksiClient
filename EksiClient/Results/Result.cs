@@ -31,5 +31,11 @@ namespace EksiClient
         /// </summary>
         /// <value>The pager.</value>
         public Pager Pager { get; set; }
+
+        /// <summary>
+        /// Gets or sets the topic.
+        /// </summary>
+        /// <value>The topic.</value>
+        public Topic Topic { get; set; }
     }
 }

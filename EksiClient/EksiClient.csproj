@@ -43,6 +43,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Helpers\ExceptionHelper.cs" />
     <Compile Include="Models\Pager.cs" />
+    <Compile Include="Helpers\HttpUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="HtmlAgilityPack">

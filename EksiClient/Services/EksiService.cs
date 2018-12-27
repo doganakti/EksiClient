@@ -74,6 +74,11 @@ namespace EksiClient
             var result = new Result<Entry>();
             try
             {
+                var sub = path.Substring(0, 4);
+                if (sub == "/?q=" && page != 0)
+                {
+                    path = path.Replace("/?q=", "/");
+                }
                 if (path.Contains("?") && page != 0)
                 {
                     path = path + $"&p={page}";
@@ -97,6 +102,29 @@ namespace EksiClient
                 {
                     var pager = pageResult.ResultList.First();
                     result.Pager = pager;
+                }
+
+                var topicResult = GetTopic(document);
+                if (topicResult.ResultList.HasItem())
+                {
+                    var query = HttpUtility.ParseQueryString(_client.BaseAddress.Query);
+                    var topic = topicResult.ResultList.First();
+                    foreach(var q in query)
+                    {
+                        var index = query.IndexOf(q);
+                        if (q.Key != "p")
+                        {
+                            if (index == 0)
+                            {
+                                topic.Path = topic.Path + $"?{q.Key}={q.Value}";
+                            }
+                            else
+                            {
+                                topic.Path = topic.Path + $"&{q.Key}={q.Value}";
+                            }
+                        }
+                    }
+                    result.Topic = topic;
                 }
 
                 foreach (var item in list)
@@ -180,6 +208,40 @@ namespace EksiClient
                 }
             }
             catch(Exception ex)
+            {
+                ExceptionHelper.Write(typeof(EksiService), ex);
+                result.Status = Status.Fail;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the topic.
+        /// </summary>
+        /// <returns>The topic.</returns>
+        /// <param name="document">Document.</param>
+        public static Result<Topic>GetTopic(HtmlDocument document)
+        {
+            var result = new Result<Topic>();
+            try
+            {
+                var eksiTopic = document.GetElementbyId("topic");
+                var eksiContainer = eksiTopic.Descendants("h1").First(o => o.Id == "title");
+                var eksiTitle = eksiContainer.Descendants("a").First();
+
+                if (eksiTitle != null)
+                {
+                    var path = eksiTitle.Attributes["href"].Value;
+                    var title = eksiTitle.InnerText.Trim();
+                    var topic = new Topic
+                    {
+                        Path = path,
+                        Title = title
+                    };
+                    result.ResultList = topic.AsList();
+                }
+            }
+            catch (Exception ex)
             {
                 ExceptionHelper.Write(typeof(EksiService), ex);
                 result.Status = Status.Fail;

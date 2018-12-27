@@ -20,6 +20,14 @@ namespace EksiReader
 
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UIButton FirstButton { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
+        UIKit.UIButton LastButton { get; set; }
+
+        [Outlet]
+        [GeneratedCode ("iOS Designer", "1.0")]
         UIKit.UIButton NextButton { get; set; }
 
         [Outlet]
@@ -35,6 +43,16 @@ namespace EksiReader
             if (Container != null) {
                 Container.Dispose ();
                 Container = null;
+            }
+
+            if (FirstButton != null) {
+                FirstButton.Dispose ();
+                FirstButton = null;
+            }
+
+            if (LastButton != null) {
+                LastButton.Dispose ();
+                LastButton = null;
             }
 
             if (NextButton != null) {

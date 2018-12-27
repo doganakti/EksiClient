@@ -92,6 +92,9 @@
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\packages\HtmlAgilityPack.1.8.11\lib\netstandard2.0\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="YouTube.Player.iOS">
+      <HintPath>..\packages\Xamarin.YouTube.Player.iOS.0.1.6\lib\XamariniOS10\YouTube.Player.iOS.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json" />
@@ -100,19 +103,18 @@
   <ItemGroup>
     <Folder Include="Resources\" />
     <Folder Include="Resources\Fonts\" />
-    <Folder Include="Application\" />
-    <Folder Include="Views\" />
-    <Folder Include="Views\Topic\" />
     <Folder Include="Models\" />
     <Folder Include="Resources\SubResources\" />
-    <Folder Include="Views\Entry\" />
     <Folder Include="Resources\Images\" />
-    <Folder Include="Views\Paging\" />
+    <Folder Include="Code\" />
+    <Folder Include="Code\Views\" />
+    <Folder Include="Code\Application\" />
+    <Folder Include="Storyboards\" />
+    <Folder Include="Code\Views\Youtube\" />
   </ItemGroup>
   <ItemGroup>
+    <InterfaceDefinition Include="Storyboards\Main.storyboard" />
     <InterfaceDefinition Include="LaunchScreen.storyboard" />
-    <InterfaceDefinition Include="Main.storyboard" />
-    <InterfaceDefinition Include="Views\Entry\EntryCell.xib" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -121,34 +123,36 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
-    <Compile Include="Application\Common.cs" />
-    <Compile Include="Application\ColorExtensions.cs" />
-    <Compile Include="Application\AppDelegate.cs" />
-    <Compile Include="Application\MainNavigationController.cs" />
-    <Compile Include="Application\MainNavigationController.designer.cs">
-      <DependentUpon>MainNavigationController.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Topic\TopicListVC.cs" />
-    <Compile Include="Views\Topic\TopicListVC.designer.cs">
-      <DependentUpon>TopicListVC.cs</DependentUpon>
-    </Compile>
     <Compile Include="Models\Template.cs" />
-    <Compile Include="Views\Entry\EntryListVC.cs" />
-    <Compile Include="Views\Entry\EntryListVC.designer.cs">
-      <DependentUpon>EntryListVC.cs</DependentUpon>
+    <Compile Include="Code\Views\Entry\EntryListVC.cs" />
+    <Compile Include="Code\Views\Entry\EntryListVC.designer.cs">
+      <DependentUpon>..\..\..\Views\Entry\EntryListVC.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Entry\EntryCell.cs" />
-    <Compile Include="Views\Entry\EntryCell.designer.cs">
-      <DependentUpon>EntryCell.cs</DependentUpon>
+    <Compile Include="Code\Views\Paging\PagingVC.cs" />
+    <Compile Include="Code\Views\Paging\PagingVC.designer.cs">
+      <DependentUpon>..\..\..\Views\Paging\PagingVC.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomEntryCell.cs" />
-    <Compile Include="CustomEntryCell.designer.cs">
+    <Compile Include="Code\Views\Topic\TopicListVC.cs" />
+    <Compile Include="Code\Views\Topic\TopicListVC.designer.cs">
+      <DependentUpon>..\..\..\Views\Topic\TopicListVC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Application\AppDelegate.cs" />
+    <Compile Include="Code\Application\ColorExtensions.cs" />
+    <Compile Include="Code\Application\Common.cs" />
+    <Compile Include="Code\Application\MainNavigationController.cs" />
+    <Compile Include="Code\Application\MainNavigationController.designer.cs">
+      <DependentUpon>..\..\Application\MainNavigationController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Views\Entry\CustomEntryCell.cs" />
+    <Compile Include="Code\Views\Entry\CustomEntryCell.designer.cs">
       <DependentUpon>CustomEntryCell.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Paging\PagingVC.cs" />
-    <Compile Include="Views\Paging\PagingVC.designer.cs">
-      <DependentUpon>PagingVC.cs</DependentUpon>
+    <Compile Include="Code\Views\Entry\TextDelegate.cs" />
+    <Compile Include="Code\Views\Youtube\YoutubeVC.cs" />
+    <Compile Include="Code\Views\Youtube\YoutubeVC.designer.cs">
+      <DependentUpon>YoutubeVC.cs</DependentUpon>
     </Compile>
+    <Compile Include="Code\Application\PopoverDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EksiClient\EksiClient.csproj">
@@ -181,6 +185,10 @@
     <BundleResource Include="Resources\Images\previous-page%403x.png" />
     <BundleResource Include="Resources\Images\previous-page%402x.png" />
     <BundleResource Include="Resources\Images\next-page%403x.png" />
+    <BundleResource Include="Resources\Images\last-arrow%402x.png" />
+    <BundleResource Include="Resources\Images\last-arrow%403x.png" />
+    <BundleResource Include="Resources\Images\first-arrow%402x.png" />
+    <BundleResource Include="Resources\Images\first-arrow%403x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

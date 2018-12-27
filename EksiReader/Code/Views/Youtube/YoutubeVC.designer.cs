@@ -7,21 +7,15 @@
 using Foundation;
 using System;
 using System.CodeDom.Compiler;
+using UIKit;
 
 namespace EksiReader
 {
-    [Register ("EntryCell")]
-    partial class EntryCell
+    [Register ("YoutubeVC")]
+    partial class YoutubeVC
     {
-        [Outlet]
-        public UIKit.UITextView TextView { get; set; }
-
         void ReleaseDesignerOutlets ()
         {
-            if (TextView != null) {
-                TextView.Dispose ();
-                TextView = null;
-            }
         }
     }
 }
