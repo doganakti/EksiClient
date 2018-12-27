@@ -172,23 +172,23 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c5C-nl-gJh">
-                                <rect key="frame" x="100" y="0.0" width="174" height="50"/>
+                                <rect key="frame" x="115" y="0.0" width="144" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AP5-Zq-P6a">
-                                        <rect key="frame" x="47" y="0.0" width="79" height="51"/>
+                                        <rect key="frame" x="32" y="0.0" width="79" height="40"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <state key="normal" title="2 / 2"/>
                                     </button>
                                     <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x6S-7O-RxI">
-                                        <rect key="frame" x="9" y="10" width="30" height="30"/>
+                                        <rect key="frame" x="10" y="8" width="25" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <inset key="imageEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
                                         <state key="normal" image="Images/previous-page.png"/>
                                     </button>
                                     <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SXh-yE-OEE">
-                                        <rect key="frame" x="134" y="10" width="30" height="30"/>
+                                        <rect key="frame" x="108" y="8" width="25" height="25"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <inset key="imageEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
                                         <state key="normal" image="Images/next-page.png"/>
@@ -204,6 +204,9 @@
                     <size key="freeformSize" width="375" height="50"/>
                     <connections>
                         <outlet property="Container" destination="c5C-nl-gJh" id="TBD-LU-FKa"/>
+                        <outlet property="PreviousButton" destination="x6S-7O-RxI" id="name-outlet-x6S-7O-RxI"/>
+                        <outlet property="NextButton" destination="SXh-yE-OEE" id="name-outlet-SXh-yE-OEE"/>
+                        <outlet property="PageButton" destination="AP5-Zq-P6a" id="name-outlet-AP5-Zq-P6a"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Thz-QT-ULH" userLabel="First Responder" sceneMemberID="firstResponder"/>

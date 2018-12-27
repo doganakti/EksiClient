@@ -12,6 +12,8 @@ namespace EksiReader
     {
         public Topic Topic { get; set; }
 
+        Pager _pager;
+
         List<Entry> _entryList;
         /// <summary>
         /// Gets or sets the entry list.
@@ -21,18 +23,6 @@ namespace EksiReader
         {
             get
             {
-                if (Topic != null && _entryList == null)
-                {
-                    Task.Run(() =>
-                    {
-                        _entryList = EksiService.GetEntries(Topic.Path);
-                        foreach(var entry in _entryList)
-                        {
-                            entry.AttributedString = Common.GetAttributedString(entry.ContentList);
-                        }
-                        BeginInvokeOnMainThread(TableView.ReloadData);
-                    });
-                }
                 return _entryList;
             }
             set
@@ -42,13 +32,15 @@ namespace EksiReader
         }
 
         PagingVC _pagingVC;
-        PagingVC PagingVC 
+        PagingVC PagingVC
         {
             get
             {
                 if (_pagingVC == null)
                 {
                     _pagingVC = (PagingVC)Storyboard.InstantiateViewController("PagingViewController");
+                    _pagingVC.OnNext += _pagingVC_OnNext;
+                    _pagingVC.OnPrevious += _pagingVC_OnPrevious;
                 }
                 return _pagingVC;
             }
@@ -58,7 +50,7 @@ namespace EksiReader
         /// Initializes a new instance of the <see cref="T:EksiReader.EntryListVC"/> class.
         /// </summary>
         /// <param name="handle">Handle.</param>
-        public EntryListVC (IntPtr handle) : base (handle)
+        public EntryListVC(IntPtr handle) : base(handle)
         {
         }
 
@@ -88,6 +80,29 @@ namespace EksiReader
             textView.SizeToFit();
             var header = new UIView(new CoreGraphics.CGRect(0, 0, 300, 200));
             TableView.TableHeaderView = textView;
+            if (Topic != null && _entryList == null)
+            {
+                SetEntryList();
+            }
+        }
+
+        void SetEntryList(int page = 0)
+        {
+            InvokeInBackground(() =>
+            {
+                var result = EksiService.GetEntries(Topic.Path, page);
+                _entryList = result.ResultList;
+                _pager = result.Pager;
+                foreach (var entry in _entryList)
+                {
+                    entry.AttributedString = Common.GetAttributedString(entry.ContentList);
+                }
+                BeginInvokeOnMainThread(() =>
+                {
+                    TableView.ReloadData();
+                    PagingVC.Pager = _pager;
+                });
+            });
         }
 
         /// <summary>
@@ -126,5 +141,18 @@ namespace EksiReader
             cell.SetEntry(entry);
             return cell;
         }
+
+        void _pagingVC_OnNext(object sender, int e)
+        {
+            Console.WriteLine(e);
+            SetEntryList(e);
+        }
+
+        void _pagingVC_OnPrevious(object sender, int e)
+        {
+            Console.WriteLine(e);
+            SetEntryList(e);
+        }
+
     }
 }

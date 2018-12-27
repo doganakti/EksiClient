@@ -69,61 +69,122 @@ namespace EksiClient
         /// <returns>The entries.</returns>
         /// <param name="path">Path.</param>
         /// <param name="page">Page.</param>
-        public static List<Entry> GetEntries(string path, int page = 0)
+        public static Result<Entry> GetEntries(string path, int page = 0, HtmlDocument document = null)
         {
-            var entryList = new List<Entry>();
-            _client.Path = path;
-            var document = _client.GetDocument();
-            var eksiContent = document.GetElementbyId("entry-item-list");
-            var list = eksiContent.ChildNodes.ToList().FindAll(o => o.Name == "li");
-            foreach (var item in list)
+            var result = new Result<Entry>();
+            try
             {
-                var link = item.Descendants("a").First().Attributes["href"];
-                var content = item.ChildNodes.First(o => o.Name == "div");
-                var text = "";
-                var entryContentList = new List<EntryContent>();
-                foreach(var childNode in content.ChildNodes)
+                if (path.Contains("?") && page != 0)
                 {
-                    if (childNode.Name == "#text")
-                    {
-                        text = text + childNode.InnerText.Trim();
-                        entryContentList.Add(new EntryContent { Text = childNode.InnerText.Trim() });
-                    }
-                    else if (childNode.Name == "br")
-                    {
-                        text = text + "\n";
-                        entryContentList.Add(new EntryContent { Break = true });
-                    }
-                    else if (childNode.Name == "a")
-                    {
-                        text = text + childNode.InnerText.Trim();
-                        var linkPath = childNode.Attributes["href"].Value;
-                        if (linkPath.Substring(0, 1).Contains("/"))
-                        {
-                            entryContentList.Add(new EntryContent { InnerLinkPath = linkPath, InnerLinkTitle = childNode.InnerText.Trim() });
-                        }
-                        else
-                        {
-                            entryContentList.Add(new EntryContent { LinkPath = linkPath, LinkTitle = childNode.InnerText.Trim() });
-                        }
-                    }
+                    path = path + $"&p={page}";
                 }
-                var footer = item.ChildNodes.First(o => o.Name == "footer");
-                var infoDiv = footer.Descendants("div").First(o => o.HasClass("info"));
-                var authorDiv = infoDiv.Descendants("a").First(o => o.HasClass("entry-author"));
-                var dateDiv = infoDiv.Descendants("a").First(o => o.HasClass("entry-date"));
-
-                var entry = new Entry
+                else if (!path.Contains("?") && page != 0)
                 {
-                    Content = text,
-                    Author = authorDiv.InnerText.Trim(),
-                    AuthorPath = authorDiv.Attributes["href"].Value,
-                    Date = dateDiv.InnerText.Trim(),
-                    ContentList = entryContentList
-                };
-                entryList.Add(entry);
+                    path = path + $"?p={page}";
+                }
+
+                var entryList = new List<Entry>();
+                if (document == null)
+                {
+                    _client.Path = path;
+                    document = _client.GetDocument();
+                }
+                var eksiContent = document.GetElementbyId("entry-item-list");
+                var list = eksiContent.ChildNodes.ToList().FindAll(o => o.Name == "li");
+
+                var pageResult = GetPager(document);
+                if (pageResult.ResultList.HasItem())
+                {
+                    var pager = pageResult.ResultList.First();
+                    result.Pager = pager;
+                }
+
+                foreach (var item in list)
+                {
+                    var link = item.Descendants("a").First().Attributes["href"];
+                    var content = item.ChildNodes.First(o => o.Name == "div");
+                    var text = "";
+                    var entryContentList = new List<EntryContent>();
+                    foreach (var childNode in content.ChildNodes)
+                    {
+                        if (childNode.Name == "#text")
+                        {
+                            text = text + childNode.InnerText.Trim();
+                            entryContentList.Add(new EntryContent { Text = childNode.InnerText.Trim() });
+                        }
+                        else if (childNode.Name == "br")
+                        {
+                            text = text + "\n";
+                            entryContentList.Add(new EntryContent { Break = true });
+                        }
+                        else if (childNode.Name == "a")
+                        {
+                            text = text + childNode.InnerText.Trim();
+                            var linkPath = childNode.Attributes["href"].Value;
+                            if (linkPath.Substring(0, 1).Contains("/"))
+                            {
+                                entryContentList.Add(new EntryContent { InnerLinkPath = linkPath, InnerLinkTitle = childNode.InnerText.Trim() });
+                            }
+                            else
+                            {
+                                entryContentList.Add(new EntryContent { LinkPath = linkPath, LinkTitle = childNode.InnerText.Trim() });
+                            }
+                        }
+                    }
+                    var footer = item.ChildNodes.First(o => o.Name == "footer");
+                    var infoDiv = footer.Descendants("div").First(o => o.HasClass("info"));
+                    var authorDiv = infoDiv.Descendants("a").First(o => o.HasClass("entry-author"));
+                    var dateDiv = infoDiv.Descendants("a").First(o => o.HasClass("entry-date"));
+
+                    var entry = new Entry
+                    {
+                        Content = text,
+                        Author = authorDiv.InnerText.Trim(),
+                        AuthorPath = authorDiv.Attributes["href"].Value,
+                        Date = dateDiv.InnerText.Trim(),
+                        ContentList = entryContentList
+                    };
+                    entryList.Add(entry);
+                }
+                result.ResultList = entryList;
             }
-            return entryList;
+            catch(Exception ex)
+            {
+                ExceptionHelper.Write(typeof(EksiService), ex);
+                result.Status = Status.Fail;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the pager.
+        /// </summary>
+        /// <returns>The pager.</returns>
+        /// <param name="document">Document.</param>
+        public static Result<Pager> GetPager(HtmlDocument document)
+        {
+            var result = new Result<Pager>();
+            try
+            {
+                var eksiTopic = document.GetElementbyId("topic");
+                var eksiContainer = eksiTopic.Descendants("div").First(o => o.HasClass("sub-title-container"));
+                var eksiPagerList = eksiContainer.Descendants("div").ToList();
+                var eksiPager = eksiPagerList.Find(o => o.HasClass("pager"));
+                if (eksiPager != null)
+                {
+                    var currentPage = eksiPager.Attributes["data-currentpage"].Value;
+                    var pageCount = eksiPager.Attributes["data-pagecount"].Value;
+                    var pager = new Pager { PageCount = Int32.Parse(pageCount), CurrentPage = Int32.Parse(currentPage) };
+                    result.ResultList = pager.AsList();
+                }
+            }
+            catch(Exception ex)
+            {
+                ExceptionHelper.Write(typeof(EksiService), ex);
+                result.Status = Status.Fail;
+            }
+            return result;
         }
 
         /// <summary>
