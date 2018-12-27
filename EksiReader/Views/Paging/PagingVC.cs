@@ -36,8 +36,9 @@ namespace EksiReader
             base.ViewDidLoad();
             Container.BackgroundColor = Common.Template.BackgroundColor.ColorFromHEX();
             Container.Layer.CornerRadius = Container.Frame.Size.Height/2;
-            Container.Layer.ShadowRadius = 3;
-            Container.Layer.ShadowOpacity = 0.5f;
+            Container.Layer.ShadowRadius = 8;
+            Container.Layer.ShadowOpacity = 0.2f;
+            //Container.Layer.ShadowColor = Common.Template.LinkColor.ColorFromHEX().CGColor;
             Container.Layer.ShadowOffset = new CoreGraphics.CGSize(0, 0);
             Container.Hidden = true;
             PageButton.SetTitle("", UIControlState.Normal);
