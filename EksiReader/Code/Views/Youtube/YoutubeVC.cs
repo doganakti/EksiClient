@@ -87,25 +87,17 @@ namespace EksiReader
             YoutubeView.Layer.CornerRadius = 8;
             YoutubeView.Layer.ShadowOffset = new CoreGraphics.CGSize(0, 0);
             YoutubeView.Layer.MasksToBounds = true;
-
+            Container.AddSubview(YoutubeView);
 
             View.AddGestureRecognizer(_panGestureRecognizer);
-            //Container.AddSubview(WebView);
             View.AddSubview(Container);
-            Container.AddSubview(YoutubeView);
+
             object[] keys = { "playsinline", "origin", "controls", "autoplay", "modestbranding", "rel", "autohide" };
             object[] values = { 1, "http://www.youtube.com", 1, 1, 1, 0, 1 };
             var playerVars = NSDictionary.FromObjectsAndKeys(values, keys, keys.Length);
             YoutubeView.LoadVideoById(url, playerVars);
             YoutubeView.BackgroundColor = UIColor.Orange;
             YoutubeView.Delegate = new VideoDelegate();
-
-            var request = NSUrlRequest.FromUrl(NSUrl.FromString(url));
-            var iframe = $"<iframe id=\"ytplayer\" type=\"text / html\" width=\"100%\" height=\"100%\" src = \"{url}\" frameborder = \"0\" ></ iframe > ";
-            //WebView.LoadRequest(request);
-            iframe = $"<iframe width=\"100%\" height=\"500\" id=\"playerId\" type=\"text / html\" src=\"{url}?showinfo=0&modestbranding=1&frameborder=0&rel=0&playsinline=1&autoplay=1\" frameborder=\"0\">";
-            //WebView.LoadHtmlString(final, NSUrl.FromString("https://www.youtube.com"));
-
         }
 
         public class VideoDelegate : YouTube.Player.PlayerViewDelegate

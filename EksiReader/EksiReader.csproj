@@ -101,6 +101,7 @@
     <ImageAsset Include="Assets.xcassets\Contents.json" />
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Logo120.png" />
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Logo180.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\LogoAlpha.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
