@@ -49,5 +49,7 @@
 		<string>Fonts/OpenSans-SemiBold.ttf</string>
 		<string>Fonts/OpenSans-SemiBoldItalic.ttf</string>
 	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 </dict>
 </plist>

@@ -13,6 +13,24 @@
     "BadgeFontSize": 13,
     "BadgeFontColor": "#1a1a1a",
     "BackgroundColor": "#f7f1e5",
-    "LinkColor": "#ab6203"
+    "LinkColor": "#ab6203",
+    "Light": true
+  },
+  "Dark": {
+    "LargeBarFontName": "OpenSans-SemiBold",
+    "LargeBarFontSize": 20,
+    "BarFontName": "OpenSans-SemiBold",
+    "BarFontSize": 15,
+    "BarFontColor": "#b5b5b5",
+    "BarBackgroundColor": "#171717",
+    "TextFontName": "Seravek",
+    "TextFontSize": 16,
+    "TextColor": "#b5b5b5",
+    "BadgeFontName": "OpenSans-SemiBold",
+    "BadgeFontSize": 13,
+    "BadgeFontColor": "#b5b5b5",
+    "BackgroundColor": "#171717",
+    "LinkColor": "#75c8f4",
+    "Light": false
   }
 }

@@ -25,8 +25,11 @@ namespace EksiReader
             TableView.BackgroundColor = Common.Template.BackgroundColor.ColorFromHEX();
             Title = "Gündem";
             SearchBar.OnSearch += SearchBar_OnSearch;
+            SearchBar.KeyboardAppearance = Common.Template.Light ? UIKeyboardAppearance.Light : UIKeyboardAppearance.Dark;
             AddRefreshControl();
             UpdateData();
+            UIApplication.SharedApplication.SetStatusBarStyle(Common.Template.Light ? UIStatusBarStyle.Default : UIStatusBarStyle.LightContent, false);
+            SetNeedsStatusBarAppearanceUpdate();
         }
 
         public void UpdateData()

@@ -89,5 +89,11 @@ namespace EksiReader
         /// </summary>
         /// <value>The color of the link.</value>
         public string LinkColor { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="T:EksiReader.Template"/> is light.
+        /// </summary>
+        /// <value><c>true</c> if light; otherwise, <c>false</c>.</value>
+        public bool Light { get; set; }
     }
 }

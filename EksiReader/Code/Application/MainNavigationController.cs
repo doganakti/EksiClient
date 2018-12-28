@@ -26,6 +26,7 @@ namespace EksiReader
             UINavigationBar.Appearance.ShadowImage = new UIImage();
             NavigationBar.BarTintColor = Common.Template.BarBackgroundColor.ColorFromHEX();
             NavigationBar.TintColor = Common.Template.LinkColor.ColorFromHEX();
+            NavigationBar.Translucent = false;
             NavigationBar.TitleTextAttributes = new UIStringAttributes()
             {
                 Font = UIFont.FromName(Common.Template.BarFontName, Common.Template.BarFontSize),
