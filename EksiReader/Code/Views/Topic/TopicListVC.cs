@@ -2,6 +2,7 @@ using EksiClient;
 using Foundation;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UIKit;
 
 namespace EksiReader
@@ -13,6 +14,7 @@ namespace EksiReader
         }
 
         List<Topic> _topicList = EksiService.GetTopics();
+        Topic _searchTopic;
 
         public override void ViewDidLoad()
         {
@@ -22,6 +24,7 @@ namespace EksiReader
             TableView.SeparatorColor = Common.Template.LinkColor.ColorFromHEX().ColorWithAlpha(0.2f);
             TableView.BackgroundColor = Common.Template.BackgroundColor.ColorFromHEX();
             Title = "Gündem";
+            SearchBar.OnSearch += SearchBar_OnSearch;
         }
 
         public override nint RowsInSection(UITableView tableView, nint section)
@@ -69,7 +72,12 @@ namespace EksiReader
         /// <param name="sender">Sender.</param>
         public override void PrepareForSegue(UIStoryboardSegue segue, NSObject sender)
         {
-            if (segue.Identifier == "EntryListSegue")
+            if (sender.GetType() == typeof(MainSearch))
+            {
+                var entryListVC = (EntryListVC)segue.DestinationViewController;
+                entryListVC.Topic = _searchTopic;
+            }
+            else if (segue.Identifier == "EntryListSegue")
             {
                 var entryListVC = (EntryListVC)segue.DestinationViewController;
                 var indexPath = (NSIndexPath)sender;
@@ -77,5 +85,15 @@ namespace EksiReader
                 entryListVC.Topic = topic;
             }
         }
+
+        void SearchBar_OnSearch(object sender, string e)
+        {
+            e = e.ToLower(new System.Globalization.CultureInfo("tr"));
+            _searchTopic = EksiService.GetSearchTopic(e);
+            SearchBar.Text = null;
+            View.EndEditing(true);
+            PerformSegue("EntryListSegue", SearchBar);
+        }
+
     }
 }

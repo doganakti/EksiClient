@@ -47,10 +47,13 @@ namespace EksiReader
                 if (_youtubeVC == null)
                 {
                     _youtubeVC = (YoutubeVC)Storyboard.InstantiateViewController("YoutubeViewController");
+                    _youtubeVC.OnDismiss += _youtubeVC_OnDismiss;
                 }
                 return _youtubeVC;
             }
         }
+
+        bool _showHeader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:EksiReader.EntryListVC"/> class.
@@ -92,9 +95,12 @@ namespace EksiReader
                 }
                 BeginInvokeOnMainThread(() =>
                 {
-                    PagingVC.Pager = _pager;
-                    TableView.ReloadData();
-                    TableView.ScrollToRow(NSIndexPath.FromRowSection(0, 0), UITableViewScrollPosition.Top, false);
+                    if (Topic != null)
+                    {
+                        PagingVC.Pager = _pager;
+                        TableView.ReloadData();
+                        TableView.ScrollToRow(NSIndexPath.FromRowSection(0, 0), UITableViewScrollPosition.Top, false);
+                    }
                 });
             });
         }
@@ -174,6 +180,30 @@ namespace EksiReader
             }
         }
 
+        public override UIView GetViewForHeader(UITableView tableView, nint section)
+        {
+            if (_showHeader)
+            {
+                return YoutubeVC.View;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public override nfloat GetHeightForHeader(UITableView tableView, nint section)
+        {
+            if (_showHeader)
+            {
+                return new CGSize(View.Frame.Size.Width, View.Frame.Size.Width * 9 / 16).Height;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         void _pagingVC_OnPage(object sender, int e)
         {
             Console.WriteLine(e);
@@ -199,8 +229,25 @@ namespace EksiReader
 
         void Cell_OnYoutube(object sender, string e)
         {
-            PresentPopoverView(YoutubeVC, (UITableViewCell)sender, new CGSize(View.Frame.Size.Width,View.Frame.Size.Width * 9 / 16));
+            //PresentPopoverView(YoutubeVC, (UITableViewCell)sender, new CGSize(View.Frame.Size.Width,View.Frame.Size.Width * 9 / 16));
+            TableView.SectionHeaderHeight = YoutubeVC.View.Frame.Size.Height;
+            _showHeader = true;
+            TableView.ReloadData();
             YoutubeVC.LoadVideo(e);
+        }
+
+        void _youtubeVC_OnDismiss(object sender, UIView e)
+        {
+            new Task(() =>
+            {
+                System.Threading.Thread.Sleep(00);
+                _showHeader = false;
+                InvokeOnMainThread(() =>
+                {
+                    TableView.ReloadData();
+
+                });
+            }).Start();
         }
 
 

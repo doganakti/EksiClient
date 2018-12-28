@@ -99,6 +99,8 @@
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json" />
     <ImageAsset Include="Assets.xcassets\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Logo120.png" />
+    <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Logo180.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -111,6 +113,7 @@
     <Folder Include="Code\Application\" />
     <Folder Include="Storyboards\" />
     <Folder Include="Code\Views\Youtube\" />
+    <Folder Include="Code\Views\Search\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Storyboards\Main.storyboard" />
@@ -153,6 +156,10 @@
       <DependentUpon>YoutubeVC.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\Application\PopoverDelegate.cs" />
+    <Compile Include="Code\Views\Search\MainSearch.cs" />
+    <Compile Include="Code\Views\Search\MainSearch.designer.cs">
+      <DependentUpon>MainSearch.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EksiClient\EksiClient.csproj">
@@ -189,6 +196,7 @@
     <BundleResource Include="Resources\Images\last-arrow%403x.png" />
     <BundleResource Include="Resources\Images\first-arrow%402x.png" />
     <BundleResource Include="Resources\Images\first-arrow%403x.png" />
+    <BundleResource Include="Resources\Images\LogoAlpha.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

@@ -5,14 +5,14 @@
     "BarFontName": "OpenSans-SemiBold",
     "BarFontSize": 15,
     "BarFontColor": "#484035",
-    "BarBackgroundColor": "#f6efdc",
+    "BarBackgroundColor": "#f7e9cc",
     "TextFontName": "Seravek",
     "TextFontSize": 16,
     "TextColor": "#1a1a1a",
     "BadgeFontName": "OpenSans-SemiBold",
     "BadgeFontSize": 13,
     "BadgeFontColor": "#1a1a1a",
-    "BackgroundColor": "#f6efdc",
+    "BackgroundColor": "#f7e9cc",
     "LinkColor": "#ab6203"
   }
 }

@@ -350,5 +350,32 @@ namespace EksiClient
             var token = tokenInput.Attributes["value"].Value;
             return token;
         }
+
+        /// <summary>
+        /// Gets the search topic.
+        /// </summary>
+        /// <returns>The search topic.</returns>
+        /// <param name="input">Input.</param>
+        public static Topic GetSearchTopic(string input)
+        {
+            var searchArray = input.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).ToList();
+            var searchString = "";
+            if (searchArray.Count() > 0)
+            {
+                foreach (var searchItem in searchArray)
+                {
+                    if (searchArray.IndexOf(searchItem) == 0)
+                    {
+                        searchString = searchItem;
+                    }
+                    else
+                    {
+                        searchString = searchString + "+" + searchItem;
+                    }
+                }
+            }
+            Topic searchTopic = new Topic { Path = $"/?q={searchString}", Title = input };
+            return searchTopic;
+        }
     }
 }

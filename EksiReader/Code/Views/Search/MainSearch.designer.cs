@@ -11,19 +11,11 @@ using UIKit;
 
 namespace EksiReader
 {
-    [Register ("TopicListVC")]
-    partial class TopicListVC
+    [Register ("MainSearch")]
+    partial class MainSearch
     {
-        [Outlet]
-        [GeneratedCode ("iOS Designer", "1.0")]
-        EksiReader.MainSearch SearchBar { get; set; }
-
         void ReleaseDesignerOutlets ()
         {
-            if (SearchBar != null) {
-                SearchBar.Dispose ();
-                SearchBar = null;
-            }
         }
     }
 }
