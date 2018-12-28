@@ -13,7 +13,7 @@ namespace EksiReader
         {
         }
 
-        List<Topic> _topicList = EksiService.GetTopics();
+        List<Topic> _topicList { get; set; } = new List<Topic>();
         Topic _searchTopic;
 
         public override void ViewDidLoad()
@@ -25,6 +25,26 @@ namespace EksiReader
             TableView.BackgroundColor = Common.Template.BackgroundColor.ColorFromHEX();
             Title = "Gündem";
             SearchBar.OnSearch += SearchBar_OnSearch;
+            AddRefreshControl();
+            UpdateData();
+        }
+
+        public void UpdateData()
+        {
+            InvokeInBackground(() =>
+            {
+                _topicList = EksiService.GetTopics();
+                BeginInvokeOnMainThread(() =>
+                {
+                    TableView.ReloadSections(NSIndexSet.FromIndex(0), UITableViewRowAnimation.Automatic);
+                    TableView.ScrollRectToVisible(CoreGraphics.CGRect.Empty, true);
+                    NSOperationQueue.CurrentQueue.AddOperation(() =>
+                    {
+                        Console.WriteLine(RefreshControl.State);
+                        RefreshControl.EndRefreshing();
+                    });
+                });
+            });
         }
 
         public override nint RowsInSection(UITableView tableView, nint section)
@@ -93,6 +113,17 @@ namespace EksiReader
             SearchBar.Text = null;
             View.EndEditing(true);
             PerformSegue("EntryListSegue", SearchBar);
+        }
+
+        void AddRefreshControl()
+        {
+            RefreshControl = new UIRefreshControl();
+            RefreshControl.ValueChanged += (sender, e) =>
+            {
+                Console.WriteLine(((UIRefreshControl)sender).State);
+                UpdateData();
+            };
+            TableView.Add(RefreshControl);
         }
 
     }

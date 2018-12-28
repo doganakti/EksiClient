@@ -60,6 +60,20 @@ namespace EksiReader
             }
         }
 
+        event EventHandler<NSUrl> _onUrl;
+        public event EventHandler<NSUrl> OnUrl
+        {
+            add
+            {
+                _onUrl = null;
+                _onUrl += value;
+            }
+            remove
+            {
+                _onUrl = null;
+            }
+        }
+
         /// <summary>
         /// Setup this instance.
         /// </summary>
@@ -76,6 +90,7 @@ namespace EksiReader
             TextView.Delegate = TextDelegate;
             TextDelegate.OnPath+= TextDelegate_OnPath;
             TextDelegate.OnYoutube += TextDelegate_OnYoutube;
+            TextDelegate.OnUrl += TextDelegate_OnUrl;
 
         }
 
@@ -104,6 +119,14 @@ namespace EksiReader
             if (_onYoutube != null)
             {
                 _onYoutube.Invoke(this, e);
+            }
+        }
+
+        void TextDelegate_OnUrl(object sender, NSUrl e)
+        {
+            if (_onUrl != null)
+            {
+                _onUrl.Invoke(this, e);
             }
         }
     }

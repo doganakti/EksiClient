@@ -35,6 +35,20 @@ namespace EksiReader
             }
         }
 
+        event EventHandler<NSUrl> _onUrl;
+        public event EventHandler<NSUrl> OnUrl
+        {
+            add
+            {
+                _onUrl = null;
+                _onUrl += value;
+            }
+            remove
+            {
+                _onUrl = null;
+            }
+        }
+
 
         public override bool ShouldInteractWithUrl(UITextView textView, NSUrl URL, NSRange characterRange)
         {
@@ -63,6 +77,15 @@ namespace EksiReader
                     {
                         return true;
                     }
+                }
+            }
+            else if(URL != null)
+            {
+                Console.WriteLine($"url detected: {URL}");
+                if (_onUrl != null)
+                {
+                    _onUrl.Invoke(this, URL);
+                    return false;
                 }
             }
             return true;

@@ -2,6 +2,7 @@ using CoreGraphics;
 using EksiClient;
 using Foundation;
 using ObjCRuntime;
+using SafariServices;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -127,7 +128,6 @@ namespace EksiReader
             return PagingVC.View;
         }
 
-
         /// <summary>
         /// Gets the cell.
         /// </summary>
@@ -166,11 +166,17 @@ namespace EksiReader
                 cell.SetEntry(entry);
                 cell.OnPath += Cell_OnPath;
                 cell.OnYoutube += Cell_OnYoutube;
+                cell.OnUrl += Cell_OnUrl;
                 cell.SelectionStyle = UITableViewCellSelectionStyle.None;
                 return cell;
             }
         }
 
+        /// <summary>
+        /// Rows the selected.
+        /// </summary>
+        /// <param name="tableView">Table view.</param>
+        /// <param name="indexPath">Index path.</param>
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
             if (indexPath.Row == 0 && _moreData != null)
@@ -180,6 +186,12 @@ namespace EksiReader
             }
         }
 
+        /// <summary>
+        /// Gets the view for header.
+        /// </summary>
+        /// <returns>The view for header.</returns>
+        /// <param name="tableView">Table view.</param>
+        /// <param name="section">Section.</param>
         public override UIView GetViewForHeader(UITableView tableView, nint section)
         {
             if (_showHeader)
@@ -192,6 +204,12 @@ namespace EksiReader
             }
         }
 
+        /// <summary>
+        /// Gets the height for header.
+        /// </summary>
+        /// <returns>The height for header.</returns>
+        /// <param name="tableView">Table view.</param>
+        /// <param name="section">Section.</param>
         public override nfloat GetHeightForHeader(UITableView tableView, nint section)
         {
             if (_showHeader)
@@ -236,6 +254,13 @@ namespace EksiReader
             YoutubeVC.LoadVideo(e);
         }
 
+        void Cell_OnUrl(object sender, NSUrl e)
+        {
+            var sfViewController = new SFSafariViewController(e, true);
+            PresentViewControllerAsync(sfViewController, true);
+        }
+
+
         void _youtubeVC_OnDismiss(object sender, UIView e)
         {
             new Task(() =>
@@ -249,7 +274,6 @@ namespace EksiReader
                 });
             }).Start();
         }
-
 
         void PresentPopoverView(UIViewController viewController, UIView sourceView, CGSize popoverSize)
         {
