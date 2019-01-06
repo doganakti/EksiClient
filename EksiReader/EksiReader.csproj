@@ -161,6 +161,10 @@
     <Compile Include="Code\Views\Search\MainSearch.designer.cs">
       <DependentUpon>MainSearch.cs</DependentUpon>
     </Compile>
+    <Compile Include="Code\Views\Topic\TopicsHeaderVC.cs" />
+    <Compile Include="Code\Views\Topic\TopicsHeaderVC.designer.cs">
+      <DependentUpon>TopicsHeaderVC.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EksiClient\EksiClient.csproj">

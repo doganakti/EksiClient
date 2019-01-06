@@ -49,8 +49,8 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Root View Controller" id="205"/>
                     <connections>
-                        <segue destination="1026" kind="show" identifier="EntryListSegue" id="1074"/>
                         <outlet property="SearchBar" destination="Ewo-Lg-7lY" id="name-outlet-Ewo-Lg-7lY"/>
+                        <segue destination="1026" kind="show" identifier="EntryListSegue" id="1074"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="211" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -287,6 +287,42 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="23423" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-144" y="886"/>
+        </scene>
+        <!--Topics HeaderVC-->
+        <scene sceneID="23690">
+            <objects>
+                <viewController storyboardIdentifier="TopicsHeaderViewController" id="23691" customClass="TopicsHeaderVC" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="23688"/>
+                        <viewControllerLayoutGuide type="bottom" id="23689"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="23692">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="39"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="23697">
+                                <rect key="frame" x="16" y="5" width="343" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="Gündem"/>
+                                    <segment title="Bugün"/>
+                                    <segment title="Başlıklar"/>
+                                </segments>
+                            </segmentedControl>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <size key="freeformSize" width="375" height="39"/>
+                    <connections>
+                        <outlet property="SegmentedControl" destination="23697" id="name-outlet-23697"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="23693" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="562" y="823"/>
         </scene>
     </scenes>
     <resources>

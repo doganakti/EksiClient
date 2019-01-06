@@ -14,7 +14,11 @@ namespace EksiReader
         }
 
         List<Topic> _topicList { get; set; } = new List<Topic>();
+        List<Channel> _channelList { get; set; } = new List<Channel>();
         Topic _searchTopic;
+        bool _channelMode = false;
+
+        TopicsHeaderVC _topicsHeaderVC { get; set; }
 
         public override void ViewDidLoad()
         {
@@ -30,13 +34,26 @@ namespace EksiReader
             UpdateData();
             UIApplication.SharedApplication.SetStatusBarStyle(Common.Template.Light ? UIStatusBarStyle.Default : UIStatusBarStyle.LightContent, false);
             SetNeedsStatusBarAppearanceUpdate();
+
+            _topicsHeaderVC = (TopicsHeaderVC)Storyboard.InstantiateViewController("TopicsHeaderViewController");
+            _topicsHeaderVC.TopicSelected += _topicsHeaderVC_TopicSelected;
+            var frame = _topicsHeaderVC.View.Frame;
+            frame.Height = 39;
+            _topicsHeaderVC.View.Frame = frame;
         }
 
-        public void UpdateData()
+        public void UpdateData(string path = "/basliklar/gundem")
         {
             InvokeInBackground(() =>
             {
-                _topicList = EksiService.GetTopics();
+                if (_channelMode)
+                {
+                    _channelList = EksiService.GetChannels();
+                }
+                else
+                {
+                    _topicList = EksiService.GetTopics(path);
+                }
                 BeginInvokeOnMainThread(() =>
                 {
                     TableView.ReloadSections(NSIndexSet.FromIndex(0), UITableViewRowAnimation.Automatic);
@@ -52,13 +69,13 @@ namespace EksiReader
 
         public override nint RowsInSection(UITableView tableView, nint section)
         {
-            return _topicList.Count;
+            return _channelMode ? _channelList.Count : _topicList.Count;
         }
 
         public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
         {
             var cell = tableView.DequeueReusableCell("TopicCell", indexPath);
-            var topic = _topicList[indexPath.Row];
+
             if (cell.AccessoryView == null)
             {
                 cell.AccessoryView = new UILabel
@@ -69,11 +86,25 @@ namespace EksiReader
                     TextColor = Common.Template.BadgeFontColor.ColorFromHEX()
                 };
             }
-            ((UILabel)cell.AccessoryView).Text = topic.Badge;
-            cell.TextLabel.Text = topic.Title;
+
+            if (_channelMode)
+            {
+                var channel = _channelList[indexPath.Row];
+                ((UILabel)cell.AccessoryView).Text = "";
+                cell.TextLabel.Text = channel.Title;
+            }
+            else
+            {
+                var topic = _topicList[indexPath.Row];
+                ((UILabel)cell.AccessoryView).Text = topic.Badge;
+                cell.TextLabel.Text = topic.Title;
+            }
+
             cell.TextLabel.Font = UIFont.FromName(Common.Template.TextFontName, Common.Template.TextFontSize);
             cell.BackgroundColor = UIColor.Clear;
             cell.TextLabel.TextColor = Common.Template.TextColor.ColorFromHEX();
+
+
             return cell;
         }
 
@@ -84,8 +115,28 @@ namespace EksiReader
         /// <param name="indexPath">Index path.</param>
         public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
         {
-            PerformSegue("EntryListSegue", indexPath);
+            if (_channelMode)
+            {
+                _channelMode = false;
+                var channel = _channelList[indexPath.Row];
+                Title = channel.Title;
+                UpdateData(channel.Path);
+            }
+            else
+            {
+                PerformSegue("EntryListSegue", indexPath);
+            }
             tableView.DeselectRow(indexPath, true);
+        }
+
+        public override nfloat GetHeightForHeader(UITableView tableView, nint section)
+        {
+            return 40;
+        }
+
+        public override UIView GetViewForHeader(UITableView tableView, nint section)
+        {
+            return _topicsHeaderVC.View;
         }
 
         /// <summary>
@@ -127,6 +178,27 @@ namespace EksiReader
                 UpdateData();
             };
             TableView.Add(RefreshControl);
+        }
+
+        void _topicsHeaderVC_TopicSelected(object sender, int e)
+        {
+            Title = ((UISegmentedControl)sender).TitleAt(e);
+            _channelMode = false;
+            if(e == 0)
+            {
+                string path = "/basliklar/gundem";
+                UpdateData(path);
+            }
+            else if (e == 1)
+            {
+                string path = "/basliklar/bugun/1";
+                UpdateData(path);
+            }
+            else if (e == 2)
+            {
+                _channelMode = true;
+                UpdateData();
+            }
         }
 
     }
