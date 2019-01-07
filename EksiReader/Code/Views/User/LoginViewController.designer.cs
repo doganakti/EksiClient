@@ -11,27 +11,27 @@ using UIKit;
 
 namespace EksiReader
 {
-    [Register ("TopicListVC")]
-    partial class TopicListVC
+    [Register ("LoginViewController")]
+    partial class LoginViewController
     {
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
-        UIKit.UIBarButtonItem AccountButton { get; set; }
+        UIKit.UIBarButtonItem CancelButton { get; set; }
 
         [Outlet]
         [GeneratedCode ("iOS Designer", "1.0")]
-        EksiReader.MainSearch SearchBar { get; set; }
+        UIKit.UIWebView WebView { get; set; }
 
         void ReleaseDesignerOutlets ()
         {
-            if (AccountButton != null) {
-                AccountButton.Dispose ();
-                AccountButton = null;
+            if (CancelButton != null) {
+                CancelButton.Dispose ();
+                CancelButton = null;
             }
 
-            if (SearchBar != null) {
-                SearchBar.Dispose ();
-                SearchBar = null;
+            if (WebView != null) {
+                WebView.Dispose ();
+                WebView = null;
             }
         }
     }

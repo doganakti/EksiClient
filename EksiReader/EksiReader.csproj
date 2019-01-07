@@ -95,6 +95,12 @@
     <Reference Include="YouTube.Player.iOS">
       <HintPath>..\packages\Xamarin.YouTube.Player.iOS.0.1.6\lib\XamariniOS10\YouTube.Player.iOS.dll</HintPath>
     </Reference>
+    <Reference Include="KeyChain.Net">
+      <HintPath>..\packages\KeyChain.Net.0.0.4\lib\Xamarin.iOS10\KeyChain.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="KeyChain.Net.XamarinIOS">
+      <HintPath>..\packages\KeyChain.Net.0.0.4\lib\Xamarin.iOS10\KeyChain.Net.XamarinIOS.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json" />
@@ -115,6 +121,7 @@
     <Folder Include="Storyboards\" />
     <Folder Include="Code\Views\Youtube\" />
     <Folder Include="Code\Views\Search\" />
+    <Folder Include="Code\Views\User\" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Storyboards\Main.storyboard" />
@@ -165,6 +172,11 @@
     <Compile Include="Code\Views\Topic\TopicsHeaderVC.designer.cs">
       <DependentUpon>TopicsHeaderVC.cs</DependentUpon>
     </Compile>
+    <Compile Include="Code\Views\User\LoginViewController.cs" />
+    <Compile Include="Code\Views\User\LoginViewController.designer.cs">
+      <DependentUpon>LoginViewController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Code\Views\User\LoginWebViewDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EksiClient\EksiClient.csproj">
@@ -202,6 +214,8 @@
     <BundleResource Include="Resources\Images\first-arrow%402x.png" />
     <BundleResource Include="Resources\Images\first-arrow%403x.png" />
     <BundleResource Include="Resources\Images\LogoAlpha.png" />
+    <BundleResource Include="Resources\Images\account%402x.png" />
+    <BundleResource Include="Resources\Images\account%403x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

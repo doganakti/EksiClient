@@ -15,6 +15,7 @@ namespace EksiClient
         static CookieContainer _cookieContainer { get; set; } = new CookieContainer();
         static HttpClientHandler _handler { get; set; } = new HttpClientHandler() { CookieContainer = _cookieContainer };
         static EksiHttpClient _client { get; set; } = new EksiHttpClient(_handler);
+        static bool LoggedIn;
 
         /// <summary>
         /// Gets the channels.
@@ -308,6 +309,11 @@ namespace EksiClient
             foreach (Cookie cookie in responseCookies)
             {
                 System.Diagnostics.Debug.WriteLine(cookie.Name + ": " + cookie.Value);
+            }
+
+            if (loggedIn)
+            {
+                LoggedIn = true;
             }
 
             return loggedIn;

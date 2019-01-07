@@ -21,6 +21,12 @@ namespace EksiReader
             // Override point for customization after application launch.
             // If not required for your application you can safely delete this method
             UIView.Appearance.TintColor = Common.Template.LinkColor.ColorFromHEX();
+
+            var helper = new KeyChain.Net.XamarinIOS.KeyChainHelper();
+            var userName = helper.GetKey("pass");
+            var password = helper.GetKey("password");
+            var loggedIn = EksiClient.EksiService.Login(userName, password);
+
             return true;
         }
 

@@ -40,6 +40,8 @@ namespace EksiReader
             var frame = _topicsHeaderVC.View.Frame;
             frame.Height = 39;
             _topicsHeaderVC.View.Frame = frame;
+
+            AccountButton.Clicked += AccountButton_Clicked;
         }
 
         public void UpdateData(string path = "/basliklar/gundem")
@@ -57,7 +59,7 @@ namespace EksiReader
                 BeginInvokeOnMainThread(() =>
                 {
                     TableView.ReloadSections(NSIndexSet.FromIndex(0), UITableViewRowAnimation.Automatic);
-                    TableView.ScrollRectToVisible(CoreGraphics.CGRect.Empty, true);
+                    //TableView.ScrollRectToVisible(CoreGraphics.CGRect.Empty, true);
                     NSOperationQueue.CurrentQueue.AddOperation(() =>
                     {
                         Console.WriteLine(RefreshControl.State);
@@ -146,18 +148,22 @@ namespace EksiReader
         /// <param name="sender">Sender.</param>
         public override void PrepareForSegue(UIStoryboardSegue segue, NSObject sender)
         {
-            if (sender.GetType() == typeof(MainSearch))
+            if (segue.Identifier == "EntryListSegue")
             {
-                var entryListVC = (EntryListVC)segue.DestinationViewController;
-                entryListVC.Topic = _searchTopic;
+                if (sender.GetType() == typeof(MainSearch))
+                {
+                    var entryListVC = (EntryListVC)segue.DestinationViewController;
+                    entryListVC.Topic = _searchTopic;
+                }
+                else if (segue.Identifier == "EntryListSegue")
+                {
+                    var entryListVC = (EntryListVC)segue.DestinationViewController;
+                    var indexPath = (NSIndexPath)sender;
+                    var topic = _topicList[indexPath.Row];
+                    entryListVC.Topic = topic;
+                }
             }
-            else if (segue.Identifier == "EntryListSegue")
-            {
-                var entryListVC = (EntryListVC)segue.DestinationViewController;
-                var indexPath = (NSIndexPath)sender;
-                var topic = _topicList[indexPath.Row];
-                entryListVC.Topic = topic;
-            }
+
         }
 
         void SearchBar_OnSearch(object sender, string e)
@@ -199,6 +205,11 @@ namespace EksiReader
                 _channelMode = true;
                 UpdateData();
             }
+        }
+
+        void AccountButton_Clicked(object sender, EventArgs e)
+        {
+            PerformSegue("Account", null);
         }
 
     }
