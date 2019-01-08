@@ -18,6 +18,9 @@ namespace EksiReader
             webViewDelegate.LoggedIn += WebViewDelegate_LoggedIn;
             WebView.Delegate = webViewDelegate;
             WebView.LoadRequest(NSUrlRequest.FromUrl(NSUrl.FromString("https://eksisozluk.com/giris")));
+            CancelButton.Clicked += CancelButton_Clicked;
+            WebView.Opaque = false;
+            WebView.BackgroundColor = UIColor.White;
         }
 
         void WebViewDelegate_LoggedIn(object sender, bool e)
@@ -26,7 +29,13 @@ namespace EksiReader
             var isSaved = helper.SetKey("userName", "myKeyValue");
             var keyValue = helper.GetKey("myKey");
             var isDeleted = helper.DeleteKey("myKey");
-            this.NavigationController.DismissViewController(true, null);
+            NavigationController.DismissViewController(true, null);
         }
+
+        void CancelButton_Clicked(object sender, EventArgs e)
+        {
+            NavigationController.DismissViewController(true, null);
+        }
+
     }
 }
