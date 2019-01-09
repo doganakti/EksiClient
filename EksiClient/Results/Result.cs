@@ -43,5 +43,17 @@ namespace EksiClient
         /// </summary>
         /// <value>The more.</value>
         public MoreData MoreData { get; set; }
+
+        /// <summary>
+        /// Gets or sets the path.
+        /// </summary>
+        /// <value>The path.</value>
+        public string Path { get; set; }
+
+        /// <summary>
+        /// Gets or sets the more page.
+        /// </summary>
+        /// <value>The more page.</value>
+        public MorePage MorePage { get; set; }
     }
 }

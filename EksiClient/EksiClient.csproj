@@ -45,6 +45,7 @@
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Helpers\HttpUtility.cs" />
     <Compile Include="Models\MoreData.cs" />
+    <Compile Include="Models\MorePage.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="HtmlAgilityPack">

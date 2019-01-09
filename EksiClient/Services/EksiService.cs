@@ -15,7 +15,6 @@ namespace EksiClient
         static CookieContainer _cookieContainer { get; set; } = new CookieContainer();
         static HttpClientHandler _handler { get; set; } = new HttpClientHandler() { CookieContainer = _cookieContainer };
         static EksiHttpClient _client { get; set; } = new EksiHttpClient(_handler);
-        static bool LoggedIn;
 
         /// <summary>
         /// Gets the channels.
@@ -45,8 +44,24 @@ namespace EksiClient
         /// <returns>The topics.</returns>
         /// <param name="path">Path.</param>
         /// <param name="page">Page.</param>
-        public static List<Topic> GetTopics(string path = "/basliklar/gundem", int page = 0)
+        public static Result<Topic> GetTopics(string path = "/basliklar/gundem", int page = 0)
         {
+            var result = new Result<Topic>();
+
+            if (page > 0)
+            {
+                var sub = path.Substring(0, 4);
+                if (sub == "/?q=" && page != 0)
+                {
+                    path = path.Replace("/?q=", "/");
+                }
+                else if (path.Contains("?p="))
+                {
+                    var array = path.Split("?p=".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    path = array[0] + $"?p={page}";
+                }
+            }
+
             var topicList = new List<Topic>();
             _client.Path = path;
             var document = _client.GetDocument();
@@ -61,7 +76,18 @@ namespace EksiClient
                 var topic = new Topic { Title = title, Path = link != null ? link.Value : null };
                 topicList.Add(topic);
             }
-            return topicList;
+            result.ResultList = topicList;
+            result.MorePage = GetMorePage(document).MorePage;
+            var pageResult = GetTopicPager(document);
+            if (pageResult.ResultList.HasItem())
+            {
+                var pager = pageResult.ResultList.First();
+                result.Pager = pager;
+            }
+
+            result.Path = path;
+
+            return result;
         }
 
         /// <summary>
@@ -193,6 +219,35 @@ namespace EksiClient
             return result;
         }
 
+        public static Result<MorePage> GetMorePage(HtmlDocument document)
+        {
+            var result = new Result<MorePage>();
+            try
+            {
+                var eksiContent = document.GetElementbyId("content");
+                var eksiContinueContainer = eksiContent.Descendants("div").First(o => o.HasClass("full-index-continue-link-container"));
+                var eksiContinue = eksiContinueContainer.Descendants("a").First();
+                if (eksiContinue != null)
+                {
+                    var path = eksiContinue.Attributes["href"].Value;
+                    var title = eksiContinue.InnerText.Trim();
+                    var morePage = new MorePage
+                    {
+                        Path = path,
+                        Title = title
+                    };
+                    result.MorePage = morePage;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ExceptionHelper.Write(typeof(EksiService), ex);
+                result.Status = Status.Fail;
+            }
+            return result;
+        }
+
         /// <summary>
         /// Gets the pager.
         /// </summary>
@@ -216,6 +271,29 @@ namespace EksiClient
                 }
             }
             catch(Exception ex)
+            {
+                ExceptionHelper.Write(typeof(EksiService), ex);
+                result.Status = Status.Fail;
+            }
+            return result;
+        }
+
+        public static Result<Pager> GetTopicPager(HtmlDocument document)
+        {
+            var result = new Result<Pager>();
+            try
+            {
+                var eksiTopic = document.GetElementbyId("content");
+                var eksiPager = eksiTopic.Descendants("div").First(o => o.HasClass("pager"));
+                if (eksiPager != null)
+                {
+                    var currentPage = eksiPager.Attributes["data-currentpage"].Value;
+                    var pageCount = eksiPager.Attributes["data-pagecount"].Value;
+                    var pager = new Pager { PageCount = Int32.Parse(pageCount), CurrentPage = Int32.Parse(currentPage) };
+                    result.ResultList = pager.AsList();
+                }
+            }
+            catch (Exception ex)
             {
                 ExceptionHelper.Write(typeof(EksiService), ex);
                 result.Status = Status.Fail;
@@ -309,11 +387,6 @@ namespace EksiClient
             foreach (Cookie cookie in responseCookies)
             {
                 System.Diagnostics.Debug.WriteLine(cookie.Name + ": " + cookie.Value);
-            }
-
-            if (loggedIn)
-            {
-                LoggedIn = true;
             }
 
             return loggedIn;

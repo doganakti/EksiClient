@@ -177,6 +177,7 @@
       <DependentUpon>LoginViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="Code\Views\User\LoginWebViewDelegate.cs" />
+    <Compile Include="Code\Application\ScrollDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EksiClient\EksiClient.csproj">

@@ -1,3 +1,4 @@
+using CoreGraphics;
 using EksiClient;
 using Foundation;
 using System;
@@ -18,6 +19,25 @@ namespace EksiReader
         Topic _searchTopic;
         bool _channelMode = false;
 
+        Pager _pager;
+        MorePage _more;
+
+        string _path;
+
+        PagingVC _pagingVC;
+        PagingVC PagingVC
+        {
+            get
+            {
+                if (_pagingVC == null)
+                {
+                    _pagingVC = (PagingVC)Storyboard.InstantiateViewController("PagingViewController");
+                    _pagingVC.OnPage += _pagingVC_OnPage;
+                }
+                return _pagingVC;
+            }
+        }
+
         TopicsHeaderVC _topicsHeaderVC { get; set; }
 
         public override void ViewDidLoad()
@@ -27,6 +47,7 @@ namespace EksiReader
             TableView.EstimatedRowHeight = 44;
             TableView.SeparatorColor = Common.Template.LinkColor.ColorFromHEX().ColorWithAlpha(0.2f);
             TableView.BackgroundColor = Common.Template.BackgroundColor.ColorFromHEX();
+            View.BackgroundColor = Common.Template.BackgroundColor.ColorFromHEX();
             Title = "Gündem";
             SearchBar.OnSearch += SearchBar_OnSearch;
             SearchBar.KeyboardAppearance = Common.Template.Light ? UIKeyboardAppearance.Light : UIKeyboardAppearance.Dark;
@@ -44,68 +65,101 @@ namespace EksiReader
             AccountButton.Clicked += AccountButton_Clicked;
         }
 
-        public void UpdateData(string path = "/basliklar/gundem")
+        public void UpdateData(string path = "/basliklar/gundem", int page = 0)
         {
-            InvokeInBackground(() =>
+            InvokeOnMainThread(() =>
             {
-                if (_channelMode)
+                var y = TableView.ContentOffset.Y;
+                y = y <= 0 ? 0 : 44;
+                TableView.ContentOffset = new CGPoint(0, y);
+                NSOperationQueue.CurrentQueue.AddOperation(() =>
                 {
-                    _channelList = EksiService.GetChannels();
-                }
-                else
-                {
-                    _topicList = EksiService.GetTopics(path);
-                }
-                BeginInvokeOnMainThread(() =>
-                {
-                    TableView.ReloadSections(NSIndexSet.FromIndex(0), UITableViewRowAnimation.Automatic);
-                    //TableView.ScrollRectToVisible(CoreGraphics.CGRect.Empty, true);
-                    NSOperationQueue.CurrentQueue.AddOperation(() =>
+                    InvokeInBackground(() =>
                     {
-                        Console.WriteLine(RefreshControl.State);
-                        RefreshControl.EndRefreshing();
+                        if (_channelMode)
+                        {
+                            _channelList = EksiService.GetChannels();
+                            _topicList = new List<Topic>();
+                            _pager = null;
+                            _more = null;
+                        }
+                        else
+                        {
+                            var result = EksiService.GetTopics(path, page);
+                            _path = result.Path;
+                            _topicList = result.ResultList;
+                            _pager = result.Pager;
+                            _more = result.MorePage;
+                            _channelList = new List<Channel>();
+                        }
+                        InvokeOnMainThread(() =>
+                        {
+                            TableView.LayoutIfNeeded();
+                            TableView.ContentOffset = new CGPoint(0, y);
+                            NSOperationQueue.CurrentQueue.AddOperation(() =>
+                            {
+                                TableView.ReloadSections(NSIndexSet.FromIndex(0), UITableViewRowAnimation.Automatic);
+                                RefreshControl.EndRefreshing();
+                                PagingVC.Pager = _pager;
+                            });
+                        });
                     });
                 });
             });
+
         }
 
         public override nint RowsInSection(UITableView tableView, nint section)
         {
-            return _channelMode ? _channelList.Count : _topicList.Count;
+            var count = _channelMode ? _channelList.Count : _topicList.Count;
+            if(!_channelMode)
+            {
+                count = _more != null ? _topicList.Count + 1 : _topicList.Count;
+            }
+            return count;
         }
 
         public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
         {
-            var cell = tableView.DequeueReusableCell("TopicCell", indexPath);
 
+            var cell = tableView.DequeueReusableCell("TopicCell", indexPath);
             if (cell.AccessoryView == null)
             {
                 cell.AccessoryView = new UILabel
                 {
-                    Frame = new CoreGraphics.CGRect(0, 0, 44, 44),
+                    Frame = new CoreGraphics.CGRect(0, 0, 64, 44),
                     TextAlignment = UITextAlignment.Right,
                     Font = UIFont.FromName(Common.Template.BadgeFontName, Common.Template.BadgeFontSize),
                     TextColor = Common.Template.BadgeFontColor.ColorFromHEX()
                 };
             }
-
-            if (_channelMode)
-            {
-                var channel = _channelList[indexPath.Row];
-                ((UILabel)cell.AccessoryView).Text = "";
-                cell.TextLabel.Text = channel.Title;
-            }
-            else
-            {
-                var topic = _topicList[indexPath.Row];
-                ((UILabel)cell.AccessoryView).Text = topic.Badge;
-                cell.TextLabel.Text = topic.Title;
-            }
-
             cell.TextLabel.Font = UIFont.FromName(Common.Template.TextFontName, Common.Template.TextFontSize);
             cell.BackgroundColor = UIColor.Clear;
             cell.TextLabel.TextColor = Common.Template.TextColor.ColorFromHEX();
 
+            if (_channelMode)
+            {
+                if (_channelList.HasItem())
+                {
+                    var channel = _channelList[indexPath.Row];
+                    ((UILabel)cell.AccessoryView).Text = "";
+                    cell.TextLabel.Text = channel.Title;
+                }
+            }
+            else
+            {
+                if (indexPath.Row < _topicList.Count)
+                {
+                    var topic = _topicList[indexPath.Row];
+                    ((UILabel)cell.AccessoryView).Text = topic.Badge;
+                    cell.TextLabel.Text = topic.Title;
+                }
+                else if(indexPath.Row == _topicList.Count && _topicList.Count > 0)
+                {
+                    cell.TextLabel.Text = "";
+                    ((UILabel)cell.AccessoryView).Text = "Daha da";
+                }
+            }
 
             return cell;
         }
@@ -126,7 +180,14 @@ namespace EksiReader
             }
             else
             {
-                PerformSegue("EntryListSegue", indexPath);
+                if (indexPath.Row < _topicList.Count)
+                {
+                    PerformSegue("EntryListSegue", indexPath);
+                }
+                else
+                {
+                    UpdateData(_more.Path);
+                }
             }
             tableView.DeselectRow(indexPath, true);
         }
@@ -139,6 +200,16 @@ namespace EksiReader
         public override UIView GetViewForHeader(UITableView tableView, nint section)
         {
             return _topicsHeaderVC.View;
+        }
+
+        public override nfloat GetHeightForFooter(UITableView tableView, nint section)
+        {
+            return 60;
+        }
+
+        public override UIView GetViewForFooter(UITableView tableView, nint section)
+        {
+            return PagingVC.View;
         }
 
         /// <summary>
@@ -192,13 +263,13 @@ namespace EksiReader
             _channelMode = false;
             if(e == 0)
             {
-                string path = "/basliklar/gundem";
-                UpdateData(path);
+                _path = "/basliklar/gundem";
+                UpdateData(_path);
             }
             else if (e == 1)
             {
-                string path = "/basliklar/bugun/1";
-                UpdateData(path);
+                _path = "/basliklar/bugun/1";
+                UpdateData(_path);
             }
             else if (e == 2)
             {
@@ -210,6 +281,21 @@ namespace EksiReader
         void AccountButton_Clicked(object sender, EventArgs e)
         {
             PerformSegue("Account", null);
+        }
+
+        void _pagingVC_OnPage(object sender, int e)
+        {
+            Console.WriteLine(e);
+            if (_path.Contains("/basliklar/bugun"))
+            {
+                _path = "/basliklar/bugun/" + e.ToString();
+                UpdateData(_path, 0);
+            }
+            else
+            {
+                UpdateData(_path, e);
+            }
+
         }
 
     }
